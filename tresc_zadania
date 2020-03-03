@@ -1,0 +1,112 @@
+Zad. 3: Kolejny program w Javie (w poszukiwaniu prezentów) [10p.]
+
+Zbliżające się ferie i sezon świąteczny zachęcają do myślenia o prezentach. W tym zadaniu spróbujemy zasymulować rozdawanie owych prezentów.
+
+Na choince z tej pracy domowej zgromadziło się wielu chętnych na prezenty (to jest dość typowe), co więcej  tę choinkę zaszczyci swoją obecnością wielu Mikołajów (co na pierwszy rzut oka jest dość nietypowe, ale całkiem praktyczne). 
+
+Obdarowywani mają swoje marzenia (zapytani podają jedną z kategorii: Książki, Majsterkowanie, Prenumerata, Inne oraz jedna dodatkowa, o której dalej). Potrafią przyjąć prezent (no raczej!), ale nie mogą tych prezentów mieć za dużo (przynajmniej w tym zadaniu). Tworząc obiekt obdarowywanego trzeba podać, ile prezentów jest on w stanie przyjąć. Ogólnie obdarowani zachowują otrzymane prezenty, wyjątkiem są rózgi, które z godnie z tradycją może wymierzyć Mikołaj zamiast dania zwykłego prezentu. Obdarowani rózgami tylko zliczają ile razy trafił im się taki podarek. Jeśli obdarowany dostanie kolejny prezent inny niż rózgi, to przed przyjęciem go sprawdza, czy nie osiągnął już limitu prezentów, jeśli tak, to prezentu nie przyjmuje i zgłasza wyjątek ZaDużoPrezentów. Wszyscy obdarowani potrafią przedstawić się w postaci tekstowej.
+
+Mikołaje potrafią przekazać prezent wskazanemu biorcy oraz przedstawić się w postaci tekstowej. Jeśli w trakcie wręczania prezentu obdarowany zgłosi wyjątek ZaDużoPrezentów, Mikołaj ów wyjątek obsługuje (wypisując stosowny komunikat). W tym zadaniu dyskretnie pomijamy realizację wręczania rózg.
+
+Prezenty choinkowe ogólnie mogą być dowolne, ale w tym zadaniu wystarczy się ograniczyć do podanych w treści przykładu. Dzielmy tutaj prezenty choinkowe na Prezenty oraz na Rózgi.
+
+Odbiorcy prezentów nie są wszyscy tacy sami (co w świecie rzeczywistym jest oczywiste, a w zadaniu ma być opisane dziedziczeniem). Również Mikołaje są różne. I tak, nasi prezentobiorcy należą do następujących kategorii:
+
+    Czytelnik - marzy o książkach, jest zadowolony jeśli dostanie pod choinkę choć jedną.
+    Markotny - marzy o kategorii Inne i zawsze jest niezadowolony.
+    Radosny - tak jak Markotny marzy o prezencie kategorii Inne, ale ale w przeciwieństwie do Markotnego jest zadowolony niezależnie od otrzymanych prezentów.
+    Typowy - marzy o sprzęcie do majsterkowania, zaś jest zadowolony z prezentów wtedy, jeśli ani razu nie trafią mu się rózgi i choć raz prezent wymarzonej kategorii.
+
+Również Mikołaje są różne:
+
+    Konserwatywny - uważa, że nic tak dobrze nie kształtuje prawego charakteru jak regularnie stosowane rózgi, dlatego tylko je rozdaje jako prezenty choinkowe.
+    Rodzinny - uważa, że nic lepiej nie stworzy ciepłej i rodzinnej atmosfery niż skarpetki, więc wręcza je wszystkim.
+    Życzliwy - stara się dopasować do marzeń obdarowywanego i wręcza prezent z odpowiedniej kategorii. Jeśli kategorią było Inne wręcza skarpetki.
+
+Uwagi:
+
+    Należy dodać jeden własny rodzaj prezentów i kategorię obdarowywanych (podklasę Typowego), która marzy o tej kategorii. Kategorie prezentów definiujemy jako typ wyliczeniowy:
+
+public enum Marzenia {
+    Książki, Majsterkowanie, Prenumerata, Inne
+}
+
+    Należy zwrócić uwagę na obiektowość rozwiązania (dziedziczenie, ukrywanie danych, interfejsu lu klasy abstrakcyjne).
+    Należy przynajmniej raz zdefiniować interfejs i przynajmniej raz klasę abstrakcyjną.
+    program należy podzielić na pakiety grupujące (odpowiednio) klasy i interfejsy dotyczące Prezentobiorców, Mikołajów, Prezentów i program główny. Uwaga: niektóre środowiska (np. IntelliJ Java) miewają problemy z polskimi znakami w nazwach katalogów (pakietów), można więc stosować w nazwach pakietów pisownię uproszczoną, bez polskich znaków.
+    Można raz zastosować rzutowanie (ogólnie staramy się rzutowań unikać).
+    Do Moodle'a należy wgrać spakowany katalog zawierający same pliki źródłowe (*.java). Ma to być kompletny (kompilujący się i dający wykonać) program w Javie. Metoda main musi być w klasie Main w pakiecie zadanie_domowe.
+
+Przykładowy fragment programu:
+
+package zadanie_domowe;
+
+import mikołaje.Konserwatywny;
+import mikołaje.Mikołaj;
+import mikołaje.Rodzinny;
+import mikołaje.Życzliwy;
+import prezentobiorcy.*;
+
+public class Main {
+
+    void choinka(){
+        System.out.println("Czas prezentów!\n");
+
+        Mikołaj[] mikolaje = new Mikołaj[]{new Życzliwy(), new Rodzinny(), new Życzliwy(), new Konserwatywny()};
+        Prezentobiorca[] dzieciMałeiDuże = new Prezentobiorca[]{new Typowy(1), new Markotny(2), new Czytelnik(1), new Radosny(10) };
+        for(int mi = 0, bi = 0, ile = 0; ile < 10; ile++, mi = (mi+1)%mikolaje.length, bi = (bi+1)%dzieciMałeiDuże.length){
+            System.out.println("Mikołaj " + mikolaje[mi] + " daje prezent " + dzieciMałeiDuże[bi]);
+            mikolaje[mi].obdaruj(dzieciMałeiDuże[bi]);
+        }
+
+        System.out.println("\nPodsumowanie:\n");
+
+        for(Prezentobiorca biorca: dzieciMałeiDuże){
+            System.out.println(biorca + (biorca.zadowolony()?" i zadowolony!":" nie jest zadowolony :("));
+        }
+
+        System.out.println("\nWszystkiego dobrego!");
+    }
+
+
+    public static void main(String[] args) {
+
+        Main o = new Main();
+        o.choinka();
+
+    }
+}
+
+i wynik jego działania:
+
+Czas prezentów!
+
+Mikołaj Życzliwy daje prezent Typowy{ileRazyRózgi=0, ilePrezentów=0: []}
+Mikołaj Rodzinny daje prezent Markotny{ileRazyRózgi=0, ilePrezentów=0: []}
+Mikołaj Życzliwy daje prezent Czytelnik{ileRazyRózgi=0, ilePrezentów=0: []}
+Mikołaj Konserwatywny daje prezent Radosny{ileRazyRózgi=0, ilePrezentów=0: []}
+Mikołaj Życzliwy daje prezent Typowy{ileRazyRózgi=0, ilePrezentów=1: [WiertarkoWkrętarka{Makita DHP483RFJ'}]}
+Ups, za dużo prezentów, przykro mi :(prezentobiorcy.ZaDużoPrezentów) dla Typowy{ileRazyRózgi=0, ilePrezentów=1: [WiertarkoWkrętarka{Makita DHP483RFJ'}]}
+Mikołaj Rodzinny daje prezent Markotny{ileRazyRózgi=0, ilePrezentów=1: [Skarpetki]}
+Mikołaj Życzliwy daje prezent Czytelnik{ileRazyRózgi=0, ilePrezentów=1: [Książka{tytuł='Prawiek', autor='Olga Tokarczuk'}]}
+Ups, za dużo prezentów, przykro mi :(prezentobiorcy.ZaDużoPrezentów) dla Czytelnik{ileRazyRózgi=0, ilePrezentów=1: [Książka{tytuł='Prawiek', autor='Olga Tokarczuk'}]}
+Mikołaj Konserwatywny daje prezent Radosny{ileRazyRózgi=1, ilePrezentów=0: []}
+Mikołaj Życzliwy daje prezent Typowy{ileRazyRózgi=0, ilePrezentów=1: [WiertarkoWkrętarka{Makita DHP483RFJ'}]}
+Ups, za dużo prezentów, przykro mi :(prezentobiorcy.ZaDużoPrezentów) dla Typowy{ileRazyRózgi=0, ilePrezentów=1: [WiertarkoWkrętarka{Makita DHP483RFJ'}]}
+Mikołaj Rodzinny daje prezent Markotny{ileRazyRózgi=0, ilePrezentów=2: [Skarpetki, Skarpetki]}
+Ups, za duzo prezentów, przykro mi :(prezentobiorcy.ZaDużoPrezentów)
+
+Podsumowanie:
+
+Typowy{ileRazyRózgi=0, ilePrezentów=1: [WiertarkoWkrętarka{Makita DHP483RFJ'}]} i zadowolony!
+Markotny{ileRazyRózgi=0, ilePrezentów=2: [Skarpetki, Skarpetki]} nie jest zadowolony :(
+Czytelnik{ileRazyRózgi=0, ilePrezentów=1: [Książka{tytuł='Prawiek', autor='Olga Tokarczuk'}]} i zadowolony!
+Radosny{ileRazyRózgi=2, ilePrezentów=0: []} i zadowolony!
+
+Wszystkiego dobrego!
+
+
+Powodzenia!
+
+PS
+ Kwestia gramatycznej przynależności Mikołajów do rzeczowników żywotnych (ludzie lub zwierzęta) lub nieżywotnych (rzeczy lub zjawiska) jest subtelna, co więcej pogląd na nią może zmieniać się z wiekiem. W treści tego zadania użyłem form nieżywotnych, za co zobowiązuję się przeprosić każdego napotkanego Mikołaja.
